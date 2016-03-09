@@ -1,5 +1,7 @@
 # Wyam Statuspage
 
+[![Build status](https://ci.appveyor.com/api/projects/status/0xavijf8b0rdj2aj?svg=true)](https://ci.appveyor.com/project/leekelleher/wyam-statuspage)
+
 **Just for fun.** Uses [Wyam][2] to reproduce [pyup.io's statuspage][1] project.
 
 For information on how to configure a GitHub repository issues for use with **statuspage**, please see the README on their project page: <https://github.com/pyupio/statuspage>
@@ -20,6 +22,8 @@ Here is what this Wyam script does...
 **Next step...**
 
 Wire this up to an AppVeyor CI build, using GitHub's webhook for "Issues" events, for [Continuous Integration][6].
+
+Here's an example of the outputted static HTML: <http://leekelleher.github.io/wyam-statuspage/>
 
 ---
 
