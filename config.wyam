@@ -1,0 +1,28 @@
+===
+---
+
+Pipelines.Add("GitHub_Issues"
+    ,ReadFiles("index.cshtml")
+		.FromTopDirectoryOnly()
+	,Meta("GitHubUser", "jayfk")
+	,Meta("GitHubRepo", "statuspage-demo") // "status.pyup.io")
+	,GitHub()
+		.WithRequest("GitHubLabels", (doc, ctx, github) => {
+			return github.Issue.Labels.GetAllForRepository(doc.Get<string>("GitHubUser"), doc.Get<string>("GitHubRepo"));
+		})
+		.WithRequest("GitHubIssues", (doc, ctx, github) => {
+			var recently = new Octokit.RepositoryIssueRequest
+			{
+				Filter = Octokit.IssueFilter.All,
+				State = Octokit.ItemState.All,
+				Since = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(90))
+			};
+			return github.Issue.GetAllForRepository(doc.Get<string>("GitHubUser"), doc.Get<string>("GitHubRepo"), recently);
+		})
+    ,Razor()
+    ,WriteFiles(".html")
+);
+
+Pipelines.Add("Assets",
+    CopyFiles("assets/*")
+);

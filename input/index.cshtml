@@ -1,0 +1,130 @@
+@{
+	const string SYSTEM_LABEL_COLOR = "171717";
+	
+	var labels = Model.Get<System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Octokit.Label>>>("GitHubLabels").Result;
+	var issues = Model.Get<System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Octokit.Issue>>>("GitHubIssues").Result;
+	
+	var systems = labels.Where(x => x.Color == SYSTEM_LABEL_COLOR).ToDictionary(x => x.Name, x => "operational");
+	var severities = labels.Where(x => x.Color != SYSTEM_LABEL_COLOR).ToDictionary(x => x.Name, x => x.Color);
+	
+	var incidents = issues;
+	
+	foreach (var incident in incidents.Where(x => x.State == Octokit.ItemState.Open))
+	{
+		var affected_systems = incident.Labels.Where(x => systems.ContainsKey(x.Name));
+		if (affected_systems != null)
+		{
+			var severity = incident.Labels.Where(x => severities.ContainsKey(x.Name)).FirstOrDefault();
+			
+			foreach (var affected_system in affected_systems)
+			{
+				systems[affected_system.Name] = severity.Name;
+			}
+		}
+	}
+	
+	var panels = systems.Where(x => x.Value != "operational");
+}
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="robots" content="index, follow">
+		<title>Wyam Status</title>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
+		<link rel="stylesheet" href="assets/milligram.min.css">
+		<link rel="stylesheet" href="assets/style.css">
+		<link rel="icon" href="assets/wyam.ico">
+	</head>
+	<body>
+	
+		<main class="wrapper">
+
+			<nav class="navigation">
+				<section class="container">
+
+					<a class="navigation-title" href="">
+						<img class="img" src="assets/wyam.png" height="30">
+						<h1 class="title">Wyam Status</h1>
+					</a>
+
+				</section>
+			</nav>
+			
+			<section class="container" id="main">
+				@if (panels == null || !panels.Any())
+				{
+					<div class="panel operational">
+						All Systems operational.
+					</div>
+				}
+				else
+				{
+					foreach (var panel in panels)
+					{
+						<div class="panel @panel.Value">
+							@(System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(panel.Value)) on @(panel.Key).
+						</div>
+					}
+				}
+				
+				<h4>Systems</h4>
+				<ul class="systems">
+					@foreach(var item in systems.OrderBy(x => x.Key))
+					{
+						<li>
+							@item.Key <span class="status @item.Value">@item.Value</span>
+						</li>
+					}
+				</ul>
+
+				<h4>Incidents</h4>
+					@if (incidents != null && incidents.Count() > 0)
+					{
+						foreach (var incident in incidents)
+						{
+							var severity = incident.Labels.Where(x => severities.ContainsKey(x.Name)).FirstOrDefault();
+							var affected_systems = incident.Labels.Where(x => systems.ContainsKey(x.Name));
+							
+							<div class="incident">
+								<span class="date">@incident.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")</span>
+
+								@if (@incident.State == Octokit.ItemState.Closed)
+								{
+									<span class="label operational float-right">resolved</span>
+								}
+								else
+								{
+									<span class="label @severity.Name float-right">@severity.Name</span>
+								}
+								
+								@foreach (var system in affected_systems)
+								{
+									<span class="label system float-right">@system.Name</span>
+								}
+								<hr/>
+
+								<span class="title">@incident.Title</span>
+								<p>@incident.Body</p>
+							</div>
+						}
+					}
+					else
+					{
+						<em>No incidents in the past 90 days.</em>
+					}
+			</section>
+
+
+			<footer class="footer">
+				<section class="container">
+					<hr/>
+					<p>Status page hosted by GitHub, generated with <a href="http://wyam.io/">Wyam</a>, inspired by <a href="https://github.com/pyupio/statuspage">pyupio/statuspage</a></p>
+				</section>
+			</footer>
+
+		</main>
+
+	</body>
+</html>
