@@ -4,8 +4,8 @@
 Pipelines.Add("GitHub_Issues"
     ,ReadFiles("index.cshtml")
 		.FromTopDirectoryOnly()
-	,Meta("GitHubUser", "jayfk")
-	,Meta("GitHubRepo", "statuspage-demo") // "status.pyup.io")
+	,Meta("GitHubUser", "leekelleher") // EDIT: Change to your GitHub username/organisation
+	,Meta("GitHubRepo", "wyam-statuspage") // EDIT: Change to your GitHub repo
 	,GitHub()
 		.WithRequest("GitHubLabels", (doc, ctx, github) => {
 			return github.Issue.Labels.GetAllForRepository(doc.Get<string>("GitHubUser"), doc.Get<string>("GitHubRepo"));
