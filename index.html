@@ -1,1 +1,72 @@
-"My Page" 
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="robots" content="index, follow">
+		<title>Wyam Status</title>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
+		<link rel="stylesheet" href="assets/milligram.min.css">
+		<link rel="stylesheet" href="assets/style.css">
+		<link rel="icon" href="assets/wyam.ico">
+	</head>
+	<body>
+	
+		<main class="wrapper">
+
+			<nav class="navigation">
+				<section class="container">
+
+					<a class="navigation-title" href="">
+						<img class="img" src="assets/wyam.png" height="30">
+						<h1 class="title">Wyam Status</h1>
+					</a>
+
+				</section>
+			</nav>
+			
+			<section class="container" id="main">
+						<div class="panel major outage">
+							Major Outage on API.
+						</div>
+				
+				<h4>Systems</h4>
+				<ul class="systems">
+						<li>
+							API <span class="status major outage">major outage</span>
+						</li>
+						<li>
+							CDN <span class="status operational">operational</span>
+						</li>
+						<li>
+							Website <span class="status operational">operational</span>
+						</li>
+				</ul>
+
+				<h4>Incidents</h4>
+							<div class="incident">
+								<span class="date">2016-03-07 09:33:04</span>
+
+									<span class="label major outage float-right">major outage</span>
+								
+									<span class="label system float-right">API</span>
+								<hr/>
+
+								<span class="title">API is down</span>
+								<p>The API is currently not reachable due to networking issues.</p>
+							</div>
+			</section>
+
+
+			<footer class="footer">
+				<section class="container">
+					<hr/>
+					<p>Status page hosted by GitHub, generated with <a href="http://wyam.io/">Wyam</a>, inspired by <a href="https://github.com/pyupio/statuspage">pyupio/statuspage</a></p>
+				</section>
+			</footer>
+
+		</main>
+
+	</body>
+</html>
