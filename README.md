@@ -1,6 +1,7 @@
 # Wyam Statuspage
 
 [![Build status](https://ci.appveyor.com/api/projects/status/0xavijf8b0rdj2aj?svg=true)](https://ci.appveyor.com/project/leekelleher/wyam-statuspage)
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
 **Just for fun.** Uses [Wyam][2] to reproduce [pyup.io's statuspage][1] project.
 
